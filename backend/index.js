@@ -11,8 +11,8 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Routes
-// Routes
-const cronJobsRoute = require('./routes/cronjobs');
+// const cronJobsRoute = require('./routes/cronjobs');
+const cronJobsRoute = require('./routes/neo4j_cronjobs');
 app.use('/api/cronjobs', cronJobsRoute);
 // Define your API routes here
 

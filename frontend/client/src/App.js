@@ -10,6 +10,7 @@ const api = axios.create({
 function App() {
   const [cronJobs, setCronJobs] = useState([]);
   const [newJob, setNewJob] = useState({ name: '', schedule: '', command: '' });
+  const [viewedJob, setViewedJob] = useState(null);
 
   useEffect(() => {
     // Fetch Cron jobs from the server
@@ -21,6 +22,18 @@ function App() {
         console.error(error);
       });
   }, []);
+
+  const handleView = jobId => {
+    // Send a GET request to view the Cron job by ID
+    api.get(`/api/cronjobs/${jobId}`)
+      .then(response => {
+        setViewedJob(response.data);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
 
   const handleInputChange = event => {
     setNewJob({ ...newJob, [event.target.name]: event.target.value });
@@ -81,11 +94,20 @@ function App() {
         <button type="submit">Add Cron Job</button>
       </form>
 
+      {viewedJob && (
+        <div>
+          <h2>{viewedJob.name}</h2>
+          <p>Schedule: {viewedJob.schedule}</p>
+          <p>Command: {viewedJob.command}</p>
+        </div>
+      )}
+
       <ul>
         {cronJobs.map(job => (
           <li key={job.id}>
-            {job.name}
-            <button onClick={() => handleDelete(job.id)}>Delete</button>
+            {job.name} <br/>
+            <button onClick={() => handleView(job.id)}>View</button> <br/>
+            <button onClick={() => handleDelete(job.id)}>Delete</button> <br/>
           </li>
         ))}
       </ul>

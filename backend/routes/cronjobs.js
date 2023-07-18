@@ -2,6 +2,7 @@
 
 const express = require('express');
 const router = express.Router();
+const driver = require('../db');
 
 // Mock data for demonstration purposes
 const cronJobs = [
@@ -49,6 +50,22 @@ router.delete('/:id', (req, res) => {
     cronJobs.splice(jobIndex, 1);
 
     res.json({ message: 'Job deleted successfully' });
+  }
+});
+
+
+// GET /api/cronjobs/:id
+router.get('/:id', (req, res) => {
+  const jobId = parseInt(req.params.id);
+
+  // Find the job with the specified ID
+  const job = cronJobs.find(job => job.id === jobId);
+
+  if (!job) {
+    // Job not found
+    res.status(404).json({ error: 'Job not found' });
+  } else {
+    res.json(job);
   }
 });
 
